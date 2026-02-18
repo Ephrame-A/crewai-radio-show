@@ -1,0 +1,26 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment Variables
+.env
+
+# Output and Logs
+output/
+*.log
+error_log*.txt
+
+# Media
+*.mp3
+*.wav
+
+# OS Files
+.DS_Store
+Thumbs.db
