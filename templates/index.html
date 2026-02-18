@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Signal — AI Radio Show Dashboard</title>
+    <meta name="description" content="Autonomous AI-powered radio show production pipeline. Generate daily news shows with AI hosts Alex and Sam.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-pulse"></div>
+            <div class="logo">
+                <span class="logo-icon">📻</span>
+                <div>
+                    <h1>The Daily Signal</h1>
+                    <p class="subtitle">Autonomous AI Radio Show</p>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="status-badge" id="globalStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Ready</span>
+            </div>
+            <div class="clock" id="clock"></div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+
+        <!-- Control Panel -->
+        <section class="panel control-panel glass">
+            <div class="panel-header">
+                <h2>🎯 Mission Control</h2>
+            </div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <label for="topicInput">Show Topic</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="topicInput" placeholder="e.g. Artificial Intelligence, Web3, Climate Tech..." value="Artificial Intelligence">
+                        <button class="btn-generate" id="generateBtn" onclick="startPipeline()">
+                            <span class="btn-icon">⚡</span>
+                            <span class="btn-text">Generate Show</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pipeline Steps -->
+                <div class="pipeline-tracker" id="pipelineTracker">
+                    <div class="pipeline-step" data-step="0">
+                        <div class="step-indicator">
+                            <div class="step-icon">🔍</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-info">
+                            <h4>The Scout</h4>
+                            <p>Researching latest news...</p>
+                        </div>
+                        <div class="step-status">
+                            <span class="pill pending">Pending</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-step" data-step="1">
+                        <div class="step-indicator">
+                            <div class="step-icon">📋</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-info">
+                            <h4>The Showrunner</h4>
+                            <p>Structuring show flow...</p>
+                        </div>
+                        <div class="step-status">
+                            <span class="pill pending">Pending</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-step" data-step="2">
+                        <div class="step-indicator">
+                            <div class="step-icon">✍️</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="step-info">
+                            <h4>The Scriptwriter</h4>
+                            <p>Writing Alex & Sam dialogue...</p>
+                        </div>
+                        <div class="step-status">
+                            <span class="pill pending">Pending</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-step" data-step="3">
+                        <div class="step-indicator">
+                            <div class="step-icon">🎙️</div>
+                        </div>
+                        <div class="step-info">
+                            <h4>Audio Generation</h4>
+                            <p>Gemini TTS rendering...</p>
+                        </div>
+                        <div class="step-status">
+                            <span class="pill pending">Pending</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout -->
+        <div class="columns">
+            <!-- Script Panel -->
+            <section class="panel script-panel glass" id="scriptPanel">
+                <div class="panel-header">
+                    <h2>📜 Show Script</h2>
+                    <div class="panel-actions">
+                        <button class="btn-icon-sm" onclick="copyScript()" title="Copy Script">📋</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="script-container" id="scriptContainer">
+                        <div class="empty-state">
+                            <div class="empty-icon">🎭</div>
+                            <h3>No Script Yet</h3>
+                            <p>Start the pipeline to generate a show script with Alex & Sam</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audio & Info Panel -->
+            <section class="panel audio-panel glass" id="audioPanel">
+                <div class="panel-header">
+                    <h2>🎧 Audio Player</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="audio-player-container" id="audioPlayerContainer">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔇</div>
+                            <h3>No Audio Yet</h3>
+                            <p>Audio will appear here after generation</p>
+                        </div>
+                    </div>
+
+                    <!-- Host Cards -->
+                    <div class="hosts-section">
+                        <h3 class="section-title">🎤 Your Hosts</h3>
+                        <div class="host-cards">
+                            <div class="host-card alex">
+                                <div class="host-avatar">⚡</div>
+                                <div class="host-info">
+                                    <h4>Alex</h4>
+                                    <p>The Tech Optimist</p>
+                                    <span class="host-tag">High-energy • Fast-talker • Visionary</span>
+                                </div>
+                                <div class="voice-badge">Voice: Kore</div>
+                            </div>
+                            <div class="host-card sam">
+                                <div class="host-avatar">🤔</div>
+                                <div class="host-info">
+                                    <h4>Sam</h4>
+                                    <p>The Skeptical Realist</p>
+                                    <span class="host-tag">Dry wit • Devil's advocate • Grounded</span>
+                                </div>
+                                <div class="voice-badge">Voice: Puck</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Architecture -->
+                    <div class="arch-section">
+                        <h3 class="section-title">⚙️ Pipeline Architecture</h3>
+                        <div class="arch-flow">
+                            <div class="arch-node">
+                                <span class="arch-label">SerperDev</span>
+                                <span class="arch-sub">Search API</span>
+                            </div>
+                            <div class="arch-arrow">→</div>
+                            <div class="arch-node">
+                                <span class="arch-label">CrewAI</span>
+                                <span class="arch-sub">3 Agents</span>
+                            </div>
+                            <div class="arch-arrow">→</div>
+                            <div class="arch-node">
+                                <span class="arch-label">Gemini</span>
+                                <span class="arch-sub">TTS Flash</span>
+                            </div>
+                            <div class="arch-arrow">→</div>
+                            <div class="arch-node highlight">
+                                <span class="arch-label">MP3</span>
+                                <span class="arch-sub">Output</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
