@@ -60,17 +60,16 @@ def reset_state(topic: str = None):
     pipeline_state["completed_at"] = ""
 
 
-def run_pipeline(topic: str):
+def run_pipeline(topic: str, gemini_key: str = "", serper_key: str = ""):
     """Run the full pipeline in a background thread."""
     try:
         pipeline_state["status"] = "running"
         pipeline_state["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Set API keys for CrewAI and tools
-        gemini_key = os.getenv("GEMINI_API_KEY", "")
-        os.environ["GEMINI_API_KEY"] = gemini_key
-        os.environ["GOOGLE_API_KEY"] = gemini_key 
-        os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY", "")
+        os.environ["GEMINI_API_KEY"] = gemini_key or os.getenv("GEMINI_API_KEY", "")
+        os.environ["GOOGLE_API_KEY"] = gemini_key or os.getenv("GEMINI_API_KEY", "")
+        os.environ["SERPER_API_KEY"] = serper_key or os.getenv("SERPER_API_KEY", "")
         
         # Ensure telemetry is disabled in the background thread too
         os.environ["CREWAI_TELEMETRY_OPT_OUT"] = "true"
@@ -136,6 +135,12 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/welcome")
+def welcome():
+    """Serve the welcome page for API key configuration."""
+    return render_template("welcome.html")
+
+
 @app.route("/api/status")
 def get_status():
     """Get current pipeline status."""
@@ -150,12 +155,14 @@ def start_pipeline():
 
     data = request.json or {}
     topic = data.get("topic", os.getenv("SHOW_TOPIC", "Artificial Intelligence"))
+    gemini_key = data.get("gemini_key", "")
+    serper_key = data.get("serper_key", "")
 
     reset_state(topic)
     pipeline_state["status"] = "running"
 
     # Run in background thread
-    thread = threading.Thread(target=run_pipeline, args=(topic,), daemon=True)
+    thread = threading.Thread(target=run_pipeline, args=(topic, gemini_key, serper_key), daemon=True)
     thread.start()
 
     return jsonify({"message": f"Pipeline started for topic: {topic}"})

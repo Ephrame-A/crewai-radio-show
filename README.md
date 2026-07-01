@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ### 2. Configure Environment
 
-Rename or edit the `.env` file with your API keys:
+For CLI usage, rename or edit the `.env` file with your API keys:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -44,18 +44,26 @@ SERPER_API_KEY=your_serper_api_key_here
 SHOW_TOPIC=Artificial Intelligence
 ```
 
+*Note: For the Web Dashboard, you can also enter these keys securely on the welcome page when you first launch the app.*
+
 ### 3. Run Application
+
+**Docker (Recommended):**
+```bash
+docker-compose up --build
+```
+Access the dashboard at [http://localhost:5000](http://localhost:5000). You will be prompted to enter your API keys.
+
+**Local Web Dashboard:**
+```bash
+python app.py
+```
+Access the dashboard at [http://localhost:5000](http://localhost:5000).
 
 **CLI Mode:**
 ```bash
 python main.py
 ```
-
-**Web Dashboard:**
-```bash
-python app.py
-```
-Access the dashboard at [http://localhost:5000](http://localhost:5000)
 
 ## Project Structure
 

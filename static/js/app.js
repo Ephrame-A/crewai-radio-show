@@ -46,10 +46,13 @@ async function startPipeline() {
     clearAudio();
 
     try {
+        const gemini_key = localStorage.getItem('gemini_key') || "";
+        const serper_key = localStorage.getItem('serper_key') || "";
+
         const response = await fetch('/api/start', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ topic }),
+            body: JSON.stringify({ topic, gemini_key, serper_key }),
         });
 
         if (!response.ok) {
@@ -348,10 +351,20 @@ function escapeHtml(text) {
 
 // --- Init ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Check for API keys
+    const geminiKey = localStorage.getItem('gemini_key');
+    if (!geminiKey && window.location.pathname === '/') {
+        window.location.href = '/welcome';
+        return;
+    }
+
     // Allow Enter to start pipeline
-    document.getElementById('topicInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') startPipeline();
-    });
+    const topicInput = document.getElementById('topicInput');
+    if (topicInput) {
+        topicInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startPipeline();
+        });
+    }
 
     // Check if there's already a script from a previous run
     fetch('/api/script')
