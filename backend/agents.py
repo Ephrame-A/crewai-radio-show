@@ -8,7 +8,37 @@ Three specialized agents that form the radio show production pipeline:
 """
 
 from crewai import Agent, LLM
-from crewai_tools import SerperDevTool, ScrapeWebsiteTool
+from crewai.tools import tool
+import os
+import requests
+from bs4 import BeautifulSoup
+
+@tool("Search the web")
+def simple_search_tool(query: str) -> str:
+    """Useful to search the internet for news. Input should be a search query."""
+    api_key = os.getenv("SERPER_API_KEY")
+    if not api_key:
+        return "Error: SERPER_API_KEY is not set."
+    headers = {'X-API-KEY': api_key, 'Content-Type': 'application/json'}
+    response = requests.post(
+        'https://google.serper.dev/search',
+        headers=headers,
+        json={'q': query, 'num': 3}
+    )
+    if response.status_code == 200:
+        results = response.json().get('organic', [])
+        return "\\n".join([f"Title: {r.get('title')}\\nLink: {r.get('link')}\\nSnippet: {r.get('snippet')}\\n" for r in results])
+    return "Search failed."
+
+@tool("Scrape Website")
+def simple_scrape_tool(url: str) -> str:
+    """Useful to read the content of a specific website. Input should be a valid URL."""
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        return soup.get_text(separator=' ', strip=True)[:5000]
+    except Exception as e:
+        return f"Failed to scrape: {str(e)}"
 
 
 def get_llm():
@@ -39,7 +69,7 @@ def create_scout():
             "out the juicy details that make for great radio. You have a "
             "nose for what will spark a lively conversation between two hosts."
         ),
-        tools=[SerperDevTool(), ScrapeWebsiteTool()],
+        tools=[simple_search_tool, simple_scrape_tool],
         llm=get_llm(),
         verbose=True,
         max_rpm=10,  # Throttling to avoid 429 Resource Exhausted errors
