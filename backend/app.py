@@ -13,7 +13,7 @@ os.environ["CREWAI_TELEMETRY_OPT_OUT"] = "true"
 import json
 import threading
 from datetime import datetime
-from flask import Flask, render_template, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -128,17 +128,6 @@ def run_pipeline(topic: str, gemini_key: str = "", serper_key: str = ""):
 
 
 # --- Routes ---
-
-@app.route("/")
-def index():
-    """Serve the main dashboard."""
-    return render_template("index.html")
-
-
-@app.route("/welcome")
-def welcome():
-    """Serve the welcome page for API key configuration."""
-    return render_template("welcome.html")
 
 
 @app.route("/api/status")

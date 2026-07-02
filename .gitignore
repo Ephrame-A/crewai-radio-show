@@ -1,18 +1,16 @@
-# Virtual Environment
+# =========================
+# Python / Backend
+# =========================
 venv/
 .venv/
 env/
-
-# Python Cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Environment Variables
-.env
-
 # Output and Logs
+backend/output/
 output/
 *.log
 error_log*.txt
@@ -21,6 +19,32 @@ error_log*.txt
 *.mp3
 *.wav
 
-# OS Files
+# =========================
+# Node / Next.js (Frontend)
+# =========================
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js build output
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# =========================
+# Environment & OS
+# =========================
+.env
+.env.*
 .DS_Store
 Thumbs.db
